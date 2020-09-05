@@ -12,13 +12,14 @@ const bucket = gc.bucket('img-repo');
 
 export const uploadImage = (file) => new Promise((resolve, reject) => {
     const { originalname, buffer } = file
-    const type = mime.lookup(file.originalname);
+    console.log(file);
     // set name and structure for file
-    const blob = bucket.file(``);
+    const fn = path.parse(file.originalname).name;
+    const blob = bucket.file(fn);
     const blobStream = blob.createWriteStream({
-        resumable: true,
-		contentType: type,
-		predefinedAcl: 'publicRead',
+      resumable: true,
+      contentType: file.mimetype,
+      predefinedAcl: 'publicRead',
     })
     blobStream.on('finish', () => {
       const publicUrl = format(
