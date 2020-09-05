@@ -2,9 +2,6 @@ import express from 'express';
 import {uploadImage} from '../gcsConfig';
 import * as storage from '@google-cloud/storage';
 import path from 'path';
-import fs from 'fs';
-import { format } from 'util';
-import { fileURLToPath } from 'url';
 import multer from 'multer';
 
 const Multer = multer({
@@ -29,7 +26,7 @@ export default function router(app: express.Application): void {
   app.post("/upload", Multer.array('file'), async (req: express.Request, res: express.Response) => {
     let promises: Array<Promise<{}>> = [];
     try {
-      (req as any).files.forEach((file, index) => {
+      (req as any).files.forEach((file) => {
         const imageUrl = uploadImage(file);
         promises.push(imageUrl);
       });

@@ -1,6 +1,5 @@
 import * as storage from '@google-cloud/storage';
 import path from 'path';
-import mime from 'mime-types';
 import { format } from 'util';
 
 const authkey = path.join(__dirname, './shckeys.json')
@@ -10,8 +9,8 @@ const gc = new storage.Storage({
 });
 const bucket = gc.bucket('img-repo');
 
-export const uploadImage = (file) => new Promise((resolve, reject) => {
-    const { originalname, buffer } = file
+export const uploadImage = (file) => new Promise((resolve) => {
+    const { buffer } = file
     console.log(file);
     // set name and structure for file
     const fn = path.parse(file.originalname).name;
