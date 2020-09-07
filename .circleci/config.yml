@@ -24,7 +24,7 @@ jobs:
           name: Get env vars
           command: |
             echo 'export PATH=~$PATH:~/.local/bin' >> $BASH_ENV
-            echo ${GCLOUD_SERVICE_KEY} > $HOME/shckeys.json
+            echo ${GCLOUD_SERVICE_KEY} > shckeys.json
             docker build -t us.gcr.io/$GOOGLE_PROJECT_ID/shc2021 -t us.gcr.io/$GOOGLE_PROJECT_ID/shc2021:v1 .
       - gcr/push-image:
           image: shc2021
