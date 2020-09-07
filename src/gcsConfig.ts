@@ -10,8 +10,7 @@ const gc = new storage.Storage({
 const bucket = gc.bucket('img-repo');
 
 export const uploadImage = (file) => new Promise((resolve) => {
-    const { buffer } = file
-    console.log(file);
+    const { buffer } = file;
     // set name and structure for file
     const fn = path.parse(file.originalname).name;
     const blob = bucket.file(fn);
