@@ -57,7 +57,7 @@ jobs:
       - gcp-gke/rollout-image:
           cluster: circle-ci-cluster
           container: shc2021
-          deployment: production
+          deployment: shc2021
           image: "us.gcr.io/shopifychallenge-288608/shc2021"
 
 
