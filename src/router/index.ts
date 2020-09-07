@@ -1,7 +1,5 @@
 import express from 'express';
-import {uploadImage} from '../gcsConfig';
-import * as storage from '@google-cloud/storage';
-import path from 'path';
+import {bucket, uploadImage} from '../gcsConfig';
 import multer from 'multer';
 
 const Multer = multer({
@@ -10,13 +8,6 @@ const Multer = multer({
       fileSize: 10 * 1024 * 1024,
     },
   })
-
-const authkey = path.join(__dirname, '/../shckeys.json')
-const gc = new storage.Storage({
-    keyFilename: authkey,
-    projectId: 'shopifychallenge-288608',
-});
-const bucket = gc.bucket('img-repo');
 
 export default function router(app: express.Application): void {
   app.route("/").get((req: express.Request, res: express.Response) => {
@@ -48,8 +39,11 @@ export default function router(app: express.Application): void {
   
   app.get('/download/:id', async (req:  express.Request, res: express.Response) => {
       const imageId: string = req.params.id;
-      const save = bucket.file(`${imageId}.jpeg`).createReadStream();
-      res.writeHead(200, {'Content-disposition': `attachment; filename=${imageId}.jpeg`});
+      const f = bucket.file(`${imageId}`);
+      const meta = await f.getMetadata();
+      const type = meta[0].contentType.split('/')[1];
+      const save = f.createReadStream();
+      res.writeHead(200, {'Content-disposition': `attachment; filename=${imageId}.${type}`});
       save.on('data', (data) => {
        res.write(data);
       })
@@ -60,4 +54,18 @@ export default function router(app: express.Application): void {
       console.log(err);
       });
     });
+
+  app.get('/search/:id', async (req:  express.Request, res: express.Response) => {
+      const searchId: string = req.params.id;
+      const [files] = await bucket.getFiles({ prefix: `${searchId}`});
+      let fa: string = "";
+      files.forEach(file => {
+        fa += file.name + ", ";
+      })
+      res
+      .send(
+        "Found these Images: " + fa
+      )
+    });
+
 }
