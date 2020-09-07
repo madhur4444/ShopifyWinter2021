@@ -13,18 +13,17 @@ jobs:
           override-ci-command: npm install
   Build-Push-Image-Docker:
     description: Build and push image to Google Container Registry
-    machine: true
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: false
       - gcr/gcr-auth
       - run:
           name: Get env vars
           command: |
             echo 'export PATH=~$PATH:~/.local/bin' >> $BASH_ENV
             echo ${GCLOUD_SERVICE_KEY} > $HOME/shckeys.json
-      - gcr/build-image:
-          image: shc2021
-          tag: "v1"
+            docker build -t us.gcr.io/$GOOGLE_PROJECT_ID/shc2021 -t us.gcr.io/$GOOGLE_PROJECT_ID/shc2021:v1 .
       - gcr/push-image:
           image: shc2021
           tag: "v1"
