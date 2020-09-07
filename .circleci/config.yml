@@ -33,7 +33,7 @@ jobs:
       - cloudrun/deploy:
           platform: "managed"
           image: "us.gcr.io/$GOOGLE_PROJECT_ID/shc2021"
-          service-name: "SHC2021"
+          service-name: "shc2021"
           region: $GOOGLE_COMPUTE_ZONE
           unauthenticated: true
 workflows:
