@@ -51,7 +51,7 @@ jobs:
     machine: true
     steps:
       - gcp-gke/install
-      - gcp-gke/publish-and-rollout-image:
+      - gcp-gke/rollout-image:
           cluster: circle-ci-cluster
           container: backendapi
           deployment: production
