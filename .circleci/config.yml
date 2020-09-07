@@ -46,6 +46,19 @@ jobs:
       #     service-name: "shc2021"
       #     region: $GOOGLE_COMPUTE_ZONE
       #     unauthenticated: true
+  deploy:
+    description: Deploy application to Google Kubernetes Engine
+    machine: true
+    steps:
+      - gcp-gke/install
+      - gcp-gke/update-kubeconfig-with-credentials:
+          cluster: circle-ci-cluster
+          perform-login: true
+      - gcp-gke/rollout-image:
+          deployment: circle-ci-cluster
+          container: shc2021
+          image: "us.gcr.io/shopifychallenge-288608/shc2021"
+
 
 workflows:
   build_update_deploy:
@@ -60,11 +73,9 @@ workflows:
           filters:
             branches:
               only: dev
-      - gcp-gke/publish-and-rollout-image:
-          cluster: circle-ci-cluster
-          container: shc2021
-          deployment: production
-          image: "us.gcr.io/$GOOGLE_PROJECT_ID/shc2021"
+      - deploy:
+          requires:
+            - Build-Push-Image-Docker
           filters:
             branches:
               only: dev
