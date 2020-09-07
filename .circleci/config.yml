@@ -9,9 +9,17 @@ jobs:
       - image: 'cimg/base:stable'
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
       - node/install
       - node/install-packages:
           override-ci-command: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
   Build-Push-Image-Docker:
     description: Build and push image to Google Container Registry
     docker:
@@ -30,12 +38,23 @@ jobs:
       - gcr/push-image:
           registry-url: "us.gcr.io"
           image: shc2021
-      - cloudrun/deploy:
-          platform: "managed"
-          image: "us.gcr.io/$GOOGLE_PROJECT_ID/shc2021"
-          service-name: "shc2021"
-          region: $GOOGLE_COMPUTE_ZONE
-          unauthenticated: true
+          tag: "v1"
+      # - cloudrun/deploy:
+      #     platform: "managed"
+      #     image: "us.gcr.io/$GOOGLE_PROJECT_ID/shc2021"
+      #     service-name: "shc2021"
+      #     region: $GOOGLE_COMPUTE_ZONE
+      #     unauthenticated: true
+  deploy:
+    description: Deploy application to Google Kubernetes Engine
+    machine: true
+    steps:
+      - gcp-gke/install
+      - gcp-gke/init
+      - gcp-gke/rollout-image:
+          deployment: circle-ci-cluster
+          container: backendapi
+          image: us.gcr.io/$GOOGLE_PROJECT_ID/shc2021
 workflows:
   build_update_deploy:
     jobs:
@@ -46,6 +65,12 @@ workflows:
       - Build-Push-Image-Docker:
           requires:
             - build
+          filters:
+            branches:
+              only: dev
+      - deploy:
+          requires:
+            - Build-Push-Image-Docker
           filters:
             branches:
               only: dev
