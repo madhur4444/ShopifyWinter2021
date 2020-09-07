@@ -55,8 +55,9 @@ jobs:
           cluster: circle-ci-cluster
           perform-login: true
       - gcp-gke/rollout-image:
-          deployment: circle-ci-cluster
+          cluster: circle-ci-cluster
           container: shc2021
+          deployment: production
           image: "us.gcr.io/shopifychallenge-288608/shc2021"
 
 
