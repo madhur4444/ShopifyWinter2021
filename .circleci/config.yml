@@ -9,6 +9,8 @@ jobs:
       - image: 'cimg/base:stable'
     steps:
       - checkout
+      - run:
+          command: cd backend
       - node/install
       - node/install-packages:
           cache-path: ~/project/node_modules
