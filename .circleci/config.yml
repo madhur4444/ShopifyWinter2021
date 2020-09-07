@@ -45,9 +45,3 @@ workflows:
           filters:
             branches:
               only: dev
-      - deploy:
-          requires:
-            - Build-Push-Image-Docker
-          filters:
-            branches:
-              only: dev
