@@ -13,6 +13,8 @@ jobs:
           override-ci-command: npm install
   Build-Push-Image-Docker:
     description: Build and push image to Google Container Registry
+    docker:
+      - image: circleci/node:10.16.3
     steps:
       - checkout
       - setup_remote_docker:
