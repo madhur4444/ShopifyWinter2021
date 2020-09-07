@@ -2,7 +2,7 @@ import * as storage from '@google-cloud/storage';
 import path from 'path';
 import { format } from 'util';
 
-const authkey = path.join(__dirname, './shckeys.json')
+const authkey = path.join(__dirname, '../shckeys.json')
 const gc = new storage.Storage({
     keyFilename: authkey,
     projectId: 'shopifychallenge-288608',
