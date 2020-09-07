@@ -24,8 +24,11 @@ Returns all possible images starting with given id
 
 Check Images for Endpoints demo, kubectl output, gcloud run output, circleci build page
 
+
 Possible Additions -
 Didn't created frontend and added more features to endpoints due to time constraints, instead decided to spend time on infrastructure and deployments.
+
+Branches - master, dev(for dev environment), dev-testing (for local testing)
 
 For local testing on device switch to dev-testing branch and build API locally,
 
