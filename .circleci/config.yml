@@ -9,8 +9,10 @@ jobs:
       - image: 'cimg/base:stable'
     steps:
       - checkout
-      - run: cd backend && node/install
-      - run: cd backend && npm install
+      - node/install
+      - node/install-packages:
+          cache-path: ~/ShopifyWinter2021/node_modules
+          override-ci-command: npm install
   Build-Push-Image-Docker:
     description: Build and push image to Google Container Registry
     machine: true
@@ -18,10 +20,10 @@ jobs:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          image: circle-gke
+          image: shc2021
           tag: "v1"
       - gcr/push-image:
-          image: circle-gke
+          image: shc2021
           tag: "v1"
 workflows:
   build_update_deploy:
