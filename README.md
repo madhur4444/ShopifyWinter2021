@@ -12,15 +12,15 @@ Endpoints -
 
 /upload
 
-Supports single and multiple image upload (attach images as file in body)
+Supports both single and multiple image upload securely to Google cloud storage bucket
 
 /download/:id
 
-downloads image by name
+downloads image by name, no need for extension
 
 /search/:id
 
-Returns all possible images starting with given id
+Returns all possible images starting with given id uploaded
 
 Check Images for Endpoints demo, kubectl output, gcloud run output, circleci build page
 
