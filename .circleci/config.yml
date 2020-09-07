@@ -46,16 +46,7 @@ jobs:
       #     service-name: "shc2021"
       #     region: $GOOGLE_COMPUTE_ZONE
       #     unauthenticated: true
-  deploy:
-    description: Deploy application to Google Kubernetes Engine
-    machine: true
-    steps:
-      - gcp-gke/install
-      - gcp-gke/rollout-image:
-          cluster: circle-ci-cluster
-          container: backendapi
-          deployment: production
-          image: us.gcr.io/$GOOGLE_PROJECT_ID/shc2021
+
 workflows:
   build_update_deploy:
     jobs:
@@ -69,9 +60,11 @@ workflows:
           filters:
             branches:
               only: dev
-      - deploy:
-          requires:
-            - Build-Push-Image-Docker
+      - gke/publish-and-rollout-image:
+          cluster: circle-ci-cluster
+          container: shc2021
+          deployment: production
+          image: "us.gcr.io/$GOOGLE_PROJECT_ID/shc2021"
           filters:
             branches:
               only: dev
