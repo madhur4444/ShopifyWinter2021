@@ -1,0 +1,25 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: shopify2021
+  labels:
+    app: backendapi
+spec:
+  selector:
+    matchLabels:
+      app: ci-deploy
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ci-deploy
+        tier: backend
+    spec:
+      containers:
+        - image: us.gcr.io/shopifychallenge-288608/shc2021
+          name: backendapi
+          ports:
+            - containerPort: 5000
+              name: ci-deploy
