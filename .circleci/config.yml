@@ -35,10 +35,19 @@ jobs:
 workflows:
   build_update_deploy:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only: dev
       - Build-Push-Image-Docker:
           requires:
             - build
+          filters:
+            branches:
+              only: dev
       - deploy:
           requires:
             - Build-Push-Image-Docker
+          filters:
+            branches:
+              only: dev
