@@ -3,15 +3,24 @@ orbs:
   node: circleci/node@4.0.0
   gcr: circleci/gcp-gcr@0.8.0
   cloudrun: circleci/gcp-cloud-run@1.0.0
+  gcp-gke: circleci/gcp-gke@1.1.0
 jobs:
   build:
     docker:
       - image: 'cimg/base:stable'
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
       - node/install
       - node/install-packages:
           override-ci-command: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
   Build-Push-Image-Docker:
     description: Build and push image to Google Container Registry
     docker:
@@ -30,22 +39,44 @@ jobs:
       - gcr/push-image:
           registry-url: "us.gcr.io"
           image: shc2021
+          tag: "v1"
       - cloudrun/deploy:
           platform: "managed"
           image: "us.gcr.io/$GOOGLE_PROJECT_ID/shc2021"
           service-name: "shc2021"
-          region: us-central1
+          region: "us-central1"
           unauthenticated: true
+  deploy:
+    description: Deploy application to Google Kubernetes Engine
+    machine: true
+    steps:
+      - gcp-gke/install
+      - gcp-gke/update-kubeconfig-with-credentials:
+          cluster: circle-ci-cluster
+          perform-login: true
+      - gcp-gke/rollout-image:
+          cluster: circle-ci-cluster
+          container: shc2021
+          deployment: shc2021
+          image: "us.gcr.io/shopifychallenge-288608/shc2021"
+
+
 workflows:
   build_update_deploy:
     jobs:
       - build:
           filters:
             branches:
-              only: master
+              only: ["master", "dev"]
       - Build-Push-Image-Docker:
           requires:
             - build
+          filters:
+            branches:
+              only: ["master", "dev"]
+      - deploy:
+          requires:
+            - Build-Push-Image-Docker
           filters:
             branches:
               only: master
