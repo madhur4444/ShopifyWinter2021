@@ -1,4 +1,6 @@
 # ShopifyWinter2021
+[![CircleCI](https://circleci.com/gh/madhur4444/ShopifyWinter2021.svg?style=shield)](https://app.circleci.com/gh/madhur4444/ShopifyWinter2021)
+
 Infrastructure challenge for Shopify Winter 2021
 Image repositary written in typescript, containerized API deployed on Google Cloud Run using CircleCI pipeline
 
