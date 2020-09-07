@@ -42,10 +42,10 @@ workflows:
       - build:
           filters:
             branches:
-              only: dev
+              only: master
       - Build-Push-Image-Docker:
           requires:
             - build
           filters:
             branches:
-              only: dev
+              only: master
