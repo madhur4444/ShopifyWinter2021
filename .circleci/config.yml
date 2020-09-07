@@ -1,6 +1,5 @@
 version: 2.1
 orbs:
-  node: circleci/node@1.0.1
   gcr: circleci/gcp-gcr@0.0.2
 jobs:
   build:
@@ -11,15 +10,18 @@ jobs:
       - run:
           name: Move
           command: cd backend
-      - node/install
-      - node/install-npm
-      - node/with-cache:
-          steps:
-            - run:
-                name: Install application dependencies
-                command: npm install
-          cache-key: package.json
-          use-strict-cache: true
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: npm-install
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
   Build-Push-Image-Docker:
     description: Build and push image to Google Container Registry
     machine: true
