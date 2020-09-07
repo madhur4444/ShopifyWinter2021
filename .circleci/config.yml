@@ -25,14 +25,14 @@ jobs:
           command: |
             echo 'export PATH=~$PATH:~/.local/bin' >> $BASH_ENV
             echo ${GCLOUD_SERVICE_KEY} > shckeys.json
-            docker build -t gcr.io/$GOOGLE_PROJECT_ID/shc2021 -t gcr.io/$GOOGLE_PROJECT_ID/shc2021:v1 .
+            docker build -t us.gcr.io/$GOOGLE_PROJECT_ID/shc2021 -t us.gcr.io/$GOOGLE_PROJECT_ID/shc2021:v1 .
       - gcr/gcr-auth:
           gcloud-service-key: GCLOUD_SERVICE_KEY
           google-project-id: GOOGLE_PROJECT_ID
           google-compute-zone: GOOGLE_COMPUTE_ZONE
       - gcr/push-image:
           google-project-id: GOOGLE_PROJECT_ID
-          registry-url: "gcr.io"
+          registry-url: "us.gcr.io"
           image: shc2021
       - cloudrun/deploy:
           platform: "managed"
