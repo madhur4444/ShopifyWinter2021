@@ -4,7 +4,6 @@ orbs:
   gcr: circleci/gcp-gcr@0.0.2
 jobs:
   build:
-    working_directory: ~/ShopifyWinter2021/backend
     docker:
       - image: 'cimg/base:stable'
     steps:
