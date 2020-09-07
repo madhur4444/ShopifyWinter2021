@@ -60,7 +60,7 @@ workflows:
           filters:
             branches:
               only: dev
-      - gke/publish-and-rollout-image:
+      - gcp-gke/publish-and-rollout-image:
           cluster: circle-ci-cluster
           container: shc2021
           deployment: production
