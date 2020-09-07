@@ -9,12 +9,8 @@ jobs:
       - image: 'cimg/base:stable'
     steps:
       - checkout
-      - run:
-          command: cd backend
-      - node/install
-      - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install
+      - run: cd backend && node/install
+      - run: cd backend && npm install
   Build-Push-Image-Docker:
     description: Build and push image to Google Container Registry
     machine: true
