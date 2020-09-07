@@ -7,7 +7,8 @@ const gc = new storage.Storage({
     keyFilename: authkey,
     projectId: 'shopifychallenge-288608',
 });
-const bucket = gc.bucket('img-repo');
+
+export const bucket = gc.bucket('img-repo');
 
 export const uploadImage = (file) => new Promise((resolve) => {
     const { buffer } = file
