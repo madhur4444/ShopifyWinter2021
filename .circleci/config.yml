@@ -3,7 +3,7 @@ orbs:
   node: circleci/node@4.0.0
   gcr: circleci/gcp-gcr@0.8.0
   cloudrun: circleci/gcp-cloud-run@1.0.0
-  gcp-gke: circleci/gcp-gke@0.1.0
+  gcp-gke: circleci/gcp-gke@1.1.0
 jobs:
   build:
     docker:
@@ -52,10 +52,13 @@ jobs:
     steps:
       - gcp-gke/install
       - gcp-gke/init
-      - gcp-gke/rollout-image:
-          deployment: circle-ci-cluster
+      - gcp-gke/publish-and-rollout-image:
+          cluster: circle-ci-cluster
           container: backendapi
+          deployment: production
           image: us.gcr.io/$GOOGLE_PROJECT_ID/shc2021
+          google-compute-zone: us-central1-a
+          tag: v1
 workflows:
   build_update_deploy:
     jobs:
