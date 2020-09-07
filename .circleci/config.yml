@@ -1,27 +1,18 @@
 version: 2.1
 orbs:
+  node: circleci/node@4.0.0
   gcr: circleci/gcp-gcr@0.0.2
 jobs:
   build:
-    description: Install npm
-    machine: true
+    working_directory: ~/ShopifyWinter2021/backend
+    docker:
+      - image: 'cimg/base:stable'
     steps:
       - checkout
-      - run:
-          name: Move
-          command: cd backend
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: npm-install
-          command: npm install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
+      - node/install
+      - node/install-packages:
+          cache-path: ~/project/node_modules
+          override-ci-command: npm install
   Build-Push-Image-Docker:
     description: Build and push image to Google Container Registry
     machine: true
