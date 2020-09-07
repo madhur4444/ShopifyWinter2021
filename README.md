@@ -7,13 +7,17 @@ Image repositary written in typescript, containerized API deployed on Google Clo
 Public Endpoint of API - https://shc2021-r5zo3s34ua-uc.a.run.app/
 
 Endpoints -
+
 /upload
+
 Supports single and multiple image upload
 
 /download/:id
+
 downloads image by name
 
 /search/:id
+
 Returns all possible images starting with given id
 
 For local testing switch to dev-testing branch,
