@@ -1,0 +1,51 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.0.0
+  gcr: circleci/gcp-gcr@0.8.0
+  cloudrun: circleci/gcp-cloud-run@1.0.0
+jobs:
+  build:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - checkout
+      - node/install
+      - node/install-packages:
+          override-ci-command: npm install
+  Build-Push-Image-Docker:
+    description: Build and push image to Google Container Registry
+    docker:
+      - image: circleci/node:10.16.3
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - run:
+          name: Get env vars
+          command: |
+            echo 'export PATH=~$PATH:~/.local/bin' >> $BASH_ENV
+            echo ${GCLOUD_SERVICE_KEY} > shckeys.json
+            docker build -t us.gcr.io/$GOOGLE_PROJECT_ID/shc2021 -t us.gcr.io/$GOOGLE_PROJECT_ID/shc2021:v1 .
+      - gcr/gcr-auth
+      - gcr/push-image:
+          registry-url: "us.gcr.io"
+          image: shc2021
+      - cloudrun/deploy:
+          platform: "managed"
+          image: "us.gcr.io/$GOOGLE_PROJECT_ID/shc2021"
+          service-name: "shc2021"
+          region: $GOOGLE_COMPUTE_ZONE
+          unauthenticated: true
+workflows:
+  build_update_deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: dev
+      - Build-Push-Image-Docker:
+          requires:
+            - build
+          filters:
+            branches:
+              only: dev

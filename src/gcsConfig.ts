@@ -2,7 +2,7 @@ import * as storage from '@google-cloud/storage';
 import path from 'path';
 import { format } from 'util';
 
-const authkey = path.join(__dirname, './shckeys.json')
+const authkey = path.join(__dirname, '../shckeys.json')
 const gc = new storage.Storage({
     keyFilename: authkey,
     projectId: 'shopifychallenge-288608',
@@ -10,8 +10,7 @@ const gc = new storage.Storage({
 const bucket = gc.bucket('img-repo');
 
 export const uploadImage = (file) => new Promise((resolve) => {
-    const { buffer } = file
-    console.log(file);
+    const { buffer } = file;
     // set name and structure for file
     const fn = path.parse(file.originalname).name;
     const blob = bucket.file(fn);

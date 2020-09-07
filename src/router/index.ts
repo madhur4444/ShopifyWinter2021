@@ -11,7 +11,7 @@ const Multer = multer({
     },
   })
 
-const authkey = path.join(__dirname, '../../shckeys.json')
+const authkey = path.join(__dirname, '/../shckeys.json')
 const gc = new storage.Storage({
     keyFilename: authkey,
     projectId: 'shopifychallenge-288608',
