@@ -56,8 +56,6 @@ jobs:
           container: backendapi
           deployment: production
           image: us.gcr.io/$GOOGLE_PROJECT_ID/shc2021
-          google-compute-zone: us-central1-a
-          tag: v1
 workflows:
   build_update_deploy:
     jobs:
